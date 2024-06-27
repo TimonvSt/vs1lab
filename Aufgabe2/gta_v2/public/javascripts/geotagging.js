@@ -112,29 +112,33 @@ class MapManager {
 }
 
 /**
- * TODO: 'updateLocation'
  * A function to retrieve the current location and update the page.
  * It is called once the page has been fully loaded.
  */
-// ... your code here ...
 function updateLocation() {
-    const callback (LocationHelper) 
-    let location = LocationHelper.findLocation(callback);
+
+    LocationHelper.findLocation((location) => {
+
+        // Update form fields with current location
+        document.getElementById("latitudeTagging").value = location.latitude;
+        document.getElementById("longitudeTagging").value = location.longitude;
+        document.getElementById("latitudeDiscovery").value = location.latitude;
+        document.getElementById("longitudeDiscovery").value = location.longitude;
+
+        // Remove children from map container
+        document.querySelectorAll("#mapView, .discovery__map span").forEach((child) => { child.remove()});
+
+        // Create Mapmanager object, initialize map and update with current location
+        let mapManager = new MapManager();
+        mapManager.initMap(location.latitude, location.longitude);
+        mapManager.updateMarkers(location.latitude, location.longitude);
+    })
     
-    let latitudeTagging = document.getElementById("latitudeTagging");
-    let longitudeTagging = document.getElementById("longitudeTagging");
-    let latitudeDiscovery = document.getElementById("latitudeDiscovery");
-    let longitudeDiscovery = document.getElementById("longitudeDiscovery");
 
-    latitudeTagging.setAttribute("value", location.latitude);
-    longitudeTagging.setAttribute("value", location.longitude);
-    latitudeDiscovery.setAttribute("value", location.latitude);
-    longitudeDiscovery.setAttribute("value", location.longitude);
 }
-
-document.addEventListener("DOMContentLoaded", updateLocation, false)
 
 // Wait for the page to fully load its DOM content, then call updateLocation
 document.addEventListener("DOMContentLoaded", () => {
-    alert("Please change the script 'geotagging.js'");
+    updateLocation();
+    //alert("Please change the script 'geotagging.js'");
 });

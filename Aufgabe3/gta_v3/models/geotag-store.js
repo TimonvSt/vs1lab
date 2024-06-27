@@ -25,8 +25,36 @@
  */
 class InMemoryGeoTagStore{
 
-    // TODO: ... your code here ...
+    #geotags;
 
+    constructor() {
+        this.#geotags = [];
+    }
+
+    // Add a geotag to the store
+    addGeoTag(geotag) {
+        this.#geotags.push(geotag);
+    }
+
+    // Remove geotags from the store by name
+    removeGeoTag(name) {
+        this.#geotags = this.#geotags.filter(geotag => geotag.name !== name);
+    }
+
+    // Get all geotags in the proximity of a location
+    getNearbyGeoTags(latitude, longitude, radius) {
+        return this.#geotags.filter(geotag => 
+            Math.sqrt(Math.pow(geotag.latitude - latitude, 2) + Math.pow(geotag.longitude - longitude, 2)) <= radius
+        );
+    }
+
+    // Search for geotags in the proximity of a location that match a keyword
+    searchNearbyGeoTags(latitude, longitude, radius, keyword) {
+        const lowerKeyword = keyword.toLowerCase();
+        return this.getNearbyGeoTags(latitude, longitude, radius).filter(geotag => 
+            geotag.name.toLowerCase().includes(lowerKeyword) || geotag.hashtag.toLowerCase().includes(lowerKeyword)
+        );
+    }
 }
 
-module.exports = InMemoryGeoTagStore
+module.exports = InMemoryGeoTagStore;
