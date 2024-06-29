@@ -26,8 +26,13 @@ const GeoTag = require('../models/geotag');
  */
 // eslint-disable-next-line no-unused-vars
 const GeoTagStore = require('../models/geotag-store');
+const geotags = new GeoTagStore();
 
-// App routes (A3)
+// add geotag examples
+const GeoTagExamples = require("../models/geotag-examples");
+for (const [name, latitude, longitude, hashtag] of GeoTagExamples.tagList) {
+  geotags.addGeoTag(new GeoTag(name, latitude, longitude, hashtag));
+}
 
 /**
  * Route '/' for HTTP 'GET' requests.
@@ -39,7 +44,9 @@ const GeoTagStore = require('../models/geotag-store');
  */
 
 router.get('/', (req, res) => {
-  res.render('index', { taglist: [] })
+  res.render('index', {
+    taglist: []
+  })
 });
 
 // API routes (A4)

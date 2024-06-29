@@ -22,7 +22,7 @@ Grundsätzlich benötigen sie als Ausgangspunkt für Aufgabe 4 eine Kopie der L�
 3. Kopieren Sie die Serverskripte aus Aufgabe 3 `Aufgabe3/gta_v3/` nach `Aufgabe4/gta_v4/`.
    - `./app.js`
    - Alle Skripte aus `./models`
-   - Das Template `Aufgabe4/gta_v4/routes/index.js` enthält Kommentare mit Hinweisen zur Erweiterungen der Routen für eine REST API. Führen sie dies mit ihrer Router-Implementierung aus `Aufgabe3/gta_v3/routes/index.js` zusammen.
+   - Das Template `Aufgabe4/gta_v4/routes/index.js` enthält Kommentare mit Hinweisen zur Erweiterungen der Routen für eine REST API. Führen sie dies mit ihrer Router-Implementierung aus `Aufgabe3/gta_v3/routes/index.js` zusammen. <!-- TODO -->
 4. Kopieren Sie die Datei `Aufgabe3/gta_v3/package.json` aus Aufgabe 3 nach `Aufgabe4/gta_v4/package.json`.
 5. Kopieren Sie das EJS-Template `Aufgabe3/gta_v3/views/index.ejs` aus Aufgabe 3 nach `Aufgabe4/gta_v4/views/index.ejs`.
 
