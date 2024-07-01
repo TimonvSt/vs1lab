@@ -14,12 +14,11 @@ console.log("The geoTagging script is going to start...");
  * It is called once the page has been fully loaded.
  */
 function updateLocation() {
+    const mapManager = new MapManager();
+    const taglist = JSON.parse(document.getElementById('map').dataset.tags);
     const latitude = document.getElementById('latitudeDiscovery').value;
     const longitude = document.getElementById('longitudeDiscovery').value;
 
-    const mapManager = new MapManager();
-    const taglist = JSON.parse(document.getElementById('map').dataset.tags);
-    
     // Remove children from map container
     document.querySelectorAll("#mapView, .discovery__map span").forEach(child => { child.remove()});
 
@@ -30,7 +29,7 @@ function updateLocation() {
             document.getElementById("longitudeTagging").value = location.longitude;
             document.getElementById("latitudeDiscovery").value = location.latitude;
             document.getElementById("longitudeDiscovery").value = location.longitude;
-    
+
             // Create Mapmanager object, initialize map and update with current location
             mapManager.initMap(location.latitude, location.longitude);
             mapManager.updateMarkers(location.latitude, location.longitude, taglist);

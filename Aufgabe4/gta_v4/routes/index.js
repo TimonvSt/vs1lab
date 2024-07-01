@@ -26,13 +26,14 @@ const GeoTag = require('../models/geotag');
  */
 // eslint-disable-next-line no-unused-vars
 const GeoTagStore = require('../models/geotag-store');
-const geotags = new GeoTagStore();
+const store = new GeoTagStore();
 
 // add geotag examples
 const GeoTagExamples = require("../models/geotag-examples");
 for (const [name, latitude, longitude, hashtag] of GeoTagExamples.tagList) {
-  geotags.addGeoTag(new GeoTag(name, latitude, longitude, hashtag));
+  store.add(new GeoTag(name, latitude, longitude, hashtag));
 }
+
 
 /**
  * Route '/' for HTTP 'GET' requests.
@@ -49,6 +50,7 @@ router.get('/', (req, res) => {
   })
 });
 
+
 // API routes (A4)
 
 /**
@@ -62,8 +64,18 @@ router.get('/', (req, res) => {
  * If 'searchterm' is present, it will be filtered by search term.
  * If 'latitude' and 'longitude' are available, it will be further filtered based on radius.
  */
-
-// TODO: ... your code here ...
+router.get('/api/geotags', (req, res) => {
+  const { searchterm, latitude, longitude} = req.query;
+  let tags;
+  if (searchterm) {
+    tags = store.searchByName(searchterm);
+  } else if (latitude && longitude) {
+    tags = store.searchNearby(parseFloat(latitude), parseFloat(longitude), 5);
+  } else {
+    tags = store.getAll();
+  }
+  res.json(tags);
+});
 
 
 /**
@@ -76,8 +88,15 @@ router.get('/', (req, res) => {
  * The URL of the new resource is returned in the header as a response.
  * The new resource is rendered as JSON in the response.
  */
-
-// TODO: ... your code here ...
+router.post('/api/geotags', (req, res) => {
+  const { name, latitude, longitude, hashtag } = req.body;
+  if (!name || !latitude || !longitude || !hashtag) {
+    return res.status(400).send('All fields are required.');
+  }
+  const newTag = new GeoTag(name, parseFloat(latitude), parseFloat(longitude), hashtag);
+  store.add(newTag);
+  res.status(201).location(`/api/geotags/${newTag.id}`).json(newTag);
+});
 
 
 /**
@@ -89,8 +108,14 @@ router.get('/', (req, res) => {
  *
  * The requested tag is rendered as JSON in the response.
  */
-
-// TODO: ... your code here ...
+router.get('/api/geotags/:id', (req, res) => {
+  const tag = store.getById(req.params.id);
+  if (tag) {
+    res.json(tag);
+  } else {
+    res.status(404).send('GeoTag not found.');
+  }
+});
 
 
 /**
@@ -106,8 +131,16 @@ router.get('/', (req, res) => {
  * Changes the tag with the corresponding ID to the sent value.
  * The updated resource is rendered as JSON in the response. 
  */
-
-// TODO: ... your code here ...
+router.put('/api/geotags/:id', (req, res) => {
+  const { name, latitude, longitude, hashtag } = req.body;
+  const updatedTag = new GeoTag(name, parseFloat(latitude), parseFloat(longitude), hashtag);
+  const success = store.update(req.params.id, updatedTag);
+  if (success) {
+    res.json(updatedTag);
+  } else {
+    res.status(404).send('GeoTag not found.');
+  }
+});
 
 
 /**
@@ -120,7 +153,13 @@ router.get('/', (req, res) => {
  * Deletes the tag with the corresponding ID.
  * The deleted resource is rendered as JSON in the response.
  */
-
-// TODO: ... your code here ...
+router.delete('/api/geotags/:id', (req, res) => {
+  const success = store.delete(req.params.id);
+  if (success) {
+    res.status(204).send();
+  } else {
+    res.status(404).send('GeoTag not found.');
+  }
+});
 
 module.exports = router;

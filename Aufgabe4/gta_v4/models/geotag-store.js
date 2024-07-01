@@ -26,34 +26,54 @@
 class InMemoryGeoTagStore{
 
     #geotags;
+    #currentId;
 
     constructor() {
         this.#geotags = [];
+        this.#currentId = 1;
     }
 
     // Add a geotag to the store
-    addGeoTag(geotag) {
+    add(geotag) {
+        geotag.id = this.#currentId++;
         this.#geotags.push(geotag);
     }
 
-    // Remove geotags from the store by name
-    removeGeoTag(name) {
-        this.#geotags = this.#geotags.filter(geotag => geotag.name !== name);
+    getAll() {
+        return this.#geotags;
     }
 
-    // Get all geotags in the proximity of a location
-    getNearbyGeoTags(latitude, longitude, radius) {
-        return this.#geotags.filter(geotag => 
-            Math.sqrt(Math.pow(geotag.latitude - latitude, 2) + Math.pow(geotag.longitude - longitude, 2)) <= radius
+    getById(id) {
+        return this.#geotags.find(tag => tag.id === parseInt(id));
+    }
+
+    searchByName(name) {
+        return this.#geotags.filter(tag => tag.name.toLowerCase().includes(name.toLowerCase()));
+    }
+
+    searchNearby(lat, lon, radius) {
+        return this.#geotags.filter(tag => 
+            Math.sqrt(Math.pow(tag.latitude - lat, 2) + Math.pow(tag.longitude - lon, 2)) <= radius
         );
     }
 
-    // Search for geotags in the proximity of a location that match a keyword
-    searchNearbyGeoTags(latitude, longitude, radius, keyword) {
-        const lowerKeyword = keyword.toLowerCase();
-        return this.getNearbyGeoTags(latitude, longitude, radius).filter(geotag => 
-            geotag.name.toLowerCase().includes(lowerKeyword) || geotag.hashtag.toLowerCase().includes(lowerKeyword)
-        );
+    update(id, newGeoTag) {
+        const index = this.#geotags.findIndex(tag => tag.id === parseInt(id));
+        if (index !== -1) {
+            newGeoTag.id = parseInt(id);
+            this.#geotags[index] = newGeoTag;
+            return true;
+        }
+        return false;
+    }
+
+    delete(id) {
+        const index = this.#geotags.findIndex(tag => tag.id === parseInt(id));
+        if (index !== -1) {
+            this.#geotags.splice(index, 1);
+            return true;
+        }
+        return false;
     }
 }
 

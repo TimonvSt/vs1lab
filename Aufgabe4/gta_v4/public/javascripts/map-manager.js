@@ -11,6 +11,7 @@
     #map
     #defaultIcon
     #markers
+
     constructor() {
         // Default Icon of Leaflet can not be loaded in our environment, so it  was manually added to the repo
         this.#defaultIcon = L.icon({
@@ -32,6 +33,7 @@
     initMap(latitude, longitude, zoom = 18) {
         // set up dynamic Leaflet map
         this.#map = L.map('map').setView([latitude, longitude], zoom);
+
         var mapLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
         L.tileLayer(
             'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -54,7 +56,7 @@
         for (const tag of tags) {
             L.marker([tag.latitude,tag.longitude], { icon: this.#defaultIcon }) // FIX change
                 .bindPopup(tag.name)
-                .addTo(this.#markers);  
+                .addTo(this.#markers);
         }
     }
 }
