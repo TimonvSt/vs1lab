@@ -65,7 +65,7 @@ router.get('/', (req, res) => {
  * If 'latitude' and 'longitude' are available, it will be further filtered based on radius.
  */
 router.get('/api/geotags', (req, res) => {
-  const { searchterm, latitude, longitude} = req.query;
+  const { searchterm, latitude, longitude, page = 1, limit = 6 } = req.query;
   let tags;
   if (searchterm) {
     tags = store.searchByName(searchterm);
@@ -74,7 +74,18 @@ router.get('/api/geotags', (req, res) => {
   } else {
     tags = store.getAll();
   }
-  res.json(tags);
+  // Pagination
+  const lastPage = Math.ceil(tags.length/limit);
+  let serverPage = page;
+  if (lastPage < page) {
+    serverPage = lastPage;
+  }
+  let result = {serverPage, lastPage, limit};
+  const startIndex = (serverPage - 1) * limit;
+  const endIndex = serverPage * limit;
+  result.tagList = tags.slice(startIndex, endIndex);
+
+  res.json(result);
 });
 
 
@@ -95,7 +106,7 @@ router.post('/api/geotags', (req, res) => {
   }
   const newTag = new GeoTag(name, parseFloat(latitude), parseFloat(longitude), hashtag);
   store.add(newTag);
-  res.status(201).location(`/api/geotags/${newTag.id}`).json(newTag);
+  res.status(201).json(newTag);
 });
 
 

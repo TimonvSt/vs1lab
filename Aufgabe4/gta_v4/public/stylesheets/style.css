@@ -150,6 +150,14 @@ main {
   margin-left: 2rem;
 }
 
+/* Styles for Pagination */
+.pagination { 
+  display: flex; 
+  flex-direction: row;
+  align-items: center; 
+  justify-content: center;
+}
+
 /* Media Queries */
 @media (max-width: 650px) {
   .col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12, input {

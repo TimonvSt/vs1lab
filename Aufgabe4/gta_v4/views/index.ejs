@@ -82,6 +82,7 @@
                                 <li><%= gtag.name %> (<%= gtag.latitude %>, <%= gtag.longitude %>) <%= gtag.hashtag %> </li>
                             <% }); %>
                         </ul>
+                        <div class="pagination" id="pagination"> </div> 
                     </div>
 
                     <div class="discovery__map" id="map" data-tags="<%= JSON.stringify(taglist) %>">

@@ -56,6 +56,24 @@ Für das Testen der REST API stehen generische Clients zur Verfügung. Damit kö
 
 Demonstrieren sie alle Routen Ihrer REST API mit einem REST Client Ihrer Wahl. Zeigen sie dazu den Lebenszyklus eines GeoTags (Erstellen, Auslesen, Ändern, Suchen, Löschen).
 
+```bash
+# create new Tag
+curl -X POST http://localhost:3000/api/geotags -H "Content-Type: application/json" -d '{"name": "New Tag", "latitude": 50.0, "longitude": 8.0, "hashtag": "#new"}'
+
+# read tag
+curl http://localhost:3000/api/geotags/12
+
+# update tag
+curl -X PUT http://localhost:3000/api/geotags/12 -H "Content-Type: application/json" -d '{"name": "Updated Tag", "latitude": 50.0, "longitude": 8.0, "hashtag": "#updated"}'
+
+# search tag
+curl http://localhost:3000/api/geotags?searchterm=Tag
+
+# delete tag
+curl -X DELETE http://localhost:3000/api/geotags/12
+
+```
+
 #### Tipps zur Verarbeitung von JSON im Express Server
 
 Die Vorverarbeitung des HTTP-Requests erfolgt mit einer in Express enthaltenen Middleware, die mit `express.json()` bereitgestellt wird (zu sehen in `./app.js`). Der Request muss den Header `Content-Type: application/json` enthalten. Der JSON-Inhalt lässt sich dann aus dem [Body des Request Objekts](http://expressjs.com/de/4x/api.html#req.body) entnehmen.
@@ -144,13 +162,13 @@ Zur Übersicht folgen noch mal alle Anforderungen in kompakter Form als Checklis
 
 ### Zusatzaufgabe: Pagination
 
-- [ ] **HTTP-Endpunkte** (Routen) im Server mit Paging-Unterstützung
-  - [ ] Abfrage von Seiten/Bereichen der Ergebnisliste
-  - [ ] Demonstration mit generischem HTTP Client
-- [ ] **Paging-Ergebnisliste** im Client
-  - [ ] Anfangs erscheinen alle GeoTags (in der Nähe) als Seitenmenge
-  - [ ] Paging Widget im Client unter Ergebnisliste
-    - [ ] Vor- und Zurückblättern von Seiten
-    - [ ] Kein Blättern vor/nach der ersten/letzten Seite
-  - [ ] Discovery und Tagging Formulare ändern Seitenmenge
-  - [ ] Client lädt immer nur eine Seite vom Server
+- [x] **HTTP-Endpunkte** (Routen) im Server mit Paging-Unterstützung
+  - [x] Abfrage von Seiten/Bereichen der Ergebnisliste
+  - [x] Demonstration mit generischem HTTP Client
+- [x] **Paging-Ergebnisliste** im Client
+  - [x] Anfangs erscheinen alle GeoTags (in der Nähe) als Seitenmenge
+  - [x] Paging Widget im Client unter Ergebnisliste
+    - [x] Vor- und Zurückblättern von Seiten
+    - [x] Kein Blättern vor/nach der ersten/letzten Seite
+  - [x] Discovery und Tagging Formulare ändern Seitenmenge
+  - [x] Client lädt immer nur eine Seite vom Server

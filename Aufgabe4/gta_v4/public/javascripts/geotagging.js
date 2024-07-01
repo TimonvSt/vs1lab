@@ -10,6 +10,7 @@
 console.log("The geoTagging script is going to start...");
 
 let mapManager = new MapManager();
+let currentPage = 1;
 
 /**
  * A function to retrieve the current location and update the page.
@@ -80,7 +81,7 @@ async function handleDiscoverySubmit(event) {
     const latitude = document.getElementById("latitudeDiscovery").value;
     const longitude = document.getElementById("longitudeDiscovery").value;
 
-    let query = "/api/geotags?";
+    let query = `/api/geotags?page=${currentPage}&`;
     if (searchterm) {
         query += `searchterm=${searchterm}&`;
     }
@@ -93,20 +94,49 @@ async function handleDiscoverySubmit(event) {
     .then(data => {
         console.log("Success:", data);
         updateDiscoveryWidget(data);
-        updateLocation(data);
+        updateLocation(data.tagList);
+        currentPage = data.serverPage;
     })
     .catch(error => console.error("Error:", error));
 }
 
-function updateDiscoveryWidget(taglist) {
+function updateDiscoveryWidget(data) {
     const list = document.getElementById("discoveryResults");
     list.innerHTML = "";
-    taglist.forEach(tag => {
+    data.tagList.forEach(tag => {
         const li = document.createElement("li");
         li.textContent = `${tag.name} (${tag.latitude}, ${tag.longitude}) - ${tag.hashtag}`;
         list.appendChild(li);
     });
+
+    // add pagination
+    const pagination = document.getElementById("pagination");
+    pagination.innerHTML = "";
+    const prev = document.createElement("a");
+    prev.id = "prevPage";
+    prev.textContent = "<";
+    pagination.appendChild(prev);
+    const pages = document.createElement("span");
+    pages.textContent = ` Page ${data.serverPage} of ${data.lastPage} `;
+    pagination.appendChild(pages);
+    const next = document.createElement("a");
+    next.id = "nextPage";
+    next.textContent = ">";
+    pagination.appendChild(next);
+
+    document.getElementById("prevPage").addEventListener("click", (e) => {
+        if (1 < currentPage) {
+            currentPage--;
+        }
+        handleDiscoverySubmit(e);
+    });
+    document.getElementById("nextPage").addEventListener("click", (e) => {
+        currentPage++;
+        handleDiscoverySubmit(e);
+    });  
 }
+
+
 
 // Wait for the page to fully load its DOM content, then call updateLocation
 document.addEventListener("DOMContentLoaded", function() {
